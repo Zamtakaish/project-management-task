@@ -6,7 +6,7 @@ import {useState} from "react";
 function App() {
 
     const [projectsState, setProjectsState] = useState({
-        selectedProject: undefined,
+        selectedProjectId: undefined,
         projects: []
     });
 
@@ -14,13 +14,14 @@ function App() {
         setProjectsState(prevState => {
             return {
                 ...prevState,
-                selectedProject: null,
+                selectedProjectId: null,
             };
         });
     }
 
     function handleAddProject(projectData) {
         setProjectsState(prevState => {
+            const projectId = Math.random();
             const newProject = {
                 ...projectData,
                 id: Math.random()
@@ -28,24 +29,23 @@ function App() {
 
             return {
                 ...prevState,
+                selectedProjectId: undefined,
                 projects: [...prevState.projects, newProject]
             }
         })
     }
 
-    console.log(projectsState);
-
     let content;
-    if (projectsState.selectedProject === null) {
+    if (projectsState.selectedProjectId === null) {
         content = <NewProject onAdd={handleAddProject}/>
-    } else if (projectsState.selectedProject === undefined) {
+    } else if (projectsState.selectedProjectId === undefined) {
         content = <NoProjectSelected onStartAddProject={handleStartAddProject}/>
     }
 
   return (
     <>
         <main className="h-screen my-8 flex gap-8">
-            <ProjectsSidebar onStartAddProject={handleStartAddProject}/>
+            <ProjectsSidebar onStartAddProject={handleStartAddProject} projects={projectsState.projects}/>
             {content}
         </main>
     </>
